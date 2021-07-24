@@ -1,4 +1,6 @@
 // JavaScript Document
+let hotelInfo;
+let details;
 let xhr = new XMLHttpRequest();
 
 xhr.open('GET', 'data.json', true);
@@ -7,26 +9,24 @@ xhr.send();
 
 xhr.onload = function(){
     if(xhr.status === 200) {
-        let myStuff = JSON.parse(xhr.responseText);
-        console.log(myStuff);
-
-        for(i = 0; i < myStuff.presidents.length; i++){
-            console.log('p: ', myStuff.presidents[i].first);
-            console.log('p: ', myStuff.presidents[i].last);
-            console.log('p: ', myStuff.presidents[i].served);
-
-            console.log('vp: ', myStuff.vicepresidents[i].first);
-            console.log('vp: ', myStuff.vicepresidents[i].last);
-        }
-        let myString = '';
-        for(i = 0; i < myStuff.presidents.length; i++){
-            let num = i + 1;
-            myString += '<br>President ' + num + ' was ';
-            myString += myStuff.presidents[i].first + ' ' + myStuff.presidents[i].last + '. ';
-            myString += 'He served from ' + myStuff.presidents[i].served + ' with ';
-
-            myString += myStuff.vicepresidents[i].first + ' ' + myStuff.vicepresidents[i].last;
-        }
-        document.getElementById('message').innerHTML = myString;
+        hotelInfo = JSON.parse(xhr.responseText);
+        display(0); // by default when data is loaded, room with id 0 will be displayed.
     }
 }
+
+// display data to the webpage
+function display(roomId) {
+    console.log('RoomId: ', roomId);
+    document.getElementById('roomName').innerHTML = hotelInfo[roomId].name;
+    document.getElementById('desc').innerHTML = hotelInfo[roomId].description;
+    document.getElementById('photo').src = hotelInfo[roomId].photo;
+
+    document.getElementById('weekday').innerHTML = hotelInfo[roomId].cost.weekday;
+    document.getElementById('weekend').innerHTML = hotelInfo[roomId].cost.weekend;
+
+    details = '';
+    for(let i = 0; i < hotelInfo[roomId].details.length; i++) {
+        details += '<p>' + hotelInfo[roomId].details[i] + '</p>';
+    } // end for
+    document.getElementById('details').innerHTML = details;
+} // end function
